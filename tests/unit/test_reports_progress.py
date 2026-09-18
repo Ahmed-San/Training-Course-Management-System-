@@ -50,3 +50,52 @@ def test_daily_report_rejects_empty_course_id():
             created_at=now,
             updated_at=now,
         )
+
+    from app.application.services.course_progress import (
+    calculate_course_progress,
+)
+from app.domain.enums import CourseStatus
+
+
+def test_progress_not_started_when_no_reports():
+    progress = calculate_course_progress(
+        total_hours=10,
+        reported_hours=[],
+    )
+
+    assert progress.completed_hours == 0
+    assert progress.remaining_hours == 10
+    assert progress.status is CourseStatus.NOT_STARTED
+
+
+def test_progress_is_in_progress():
+    progress = calculate_course_progress(
+        total_hours=10,
+        reported_hours=[3, 2],
+    )
+
+    assert progress.completed_hours == 5
+    assert progress.remaining_hours == 5
+    assert progress.status is CourseStatus.IN_PROGRESS
+
+
+def test_progress_is_completed():
+    progress = calculate_course_progress(
+        total_hours=10,
+        reported_hours=[5, 5],
+    )
+
+    assert progress.completed_hours == 10
+    assert progress.remaining_hours == 0
+    assert progress.status is CourseStatus.COMPLETED
+
+
+def test_progress_never_has_negative_remaining_hours():
+    progress = calculate_course_progress(
+        total_hours=10,
+        reported_hours=[6, 6],
+    )
+
+    assert progress.completed_hours == 12
+    assert progress.remaining_hours == 0
+    assert progress.status is CourseStatus.COMPLETED
