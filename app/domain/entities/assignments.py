@@ -28,3 +28,5 @@ class TrainerTraineeAssignment(BaseEntity):
         self.course_id = validate_non_empty(self.course_id, "course_id")
         self.trainer_id = validate_non_empty(self.trainer_id, "trainer_id")
         self.trainee_id = validate_non_empty(self.trainee_id, "trainee_id")
+
+#TODO: Consider adding methods to check if a trainer is assigned to a specific course or if a trainee is assigned to a specific trainer.
