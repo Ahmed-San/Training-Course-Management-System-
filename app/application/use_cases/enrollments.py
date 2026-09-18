@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from app.application.dto.requests import EnrollTraineeRequest
 from app.application.use_cases.common import require_authenticated, require_manager
 from app.domain.entities.enrollment import Enrollment
-from app.domain.enums import CourseStatus, EnrollmentStatus, Role
+from app.domain.enums import EnrollmentStatus, Role
 from app.domain.exceptions import AuthorizationError, BusinessRuleError
 
 
@@ -15,14 +15,7 @@ class EnrollTraineeUseCase:
         require_manager(current_user)
         with self._uow_factory() as uow:
             uow.trainee_repository.get_required(request.trainee_id)
-            course = uow.course_repository.get_required(request.course_id)
-            from app.application.services.course_progress import calculate_course_progress
-            progress = calculate_course_progress(
-                total_hours=course.total_hours,
-                reported_hours=[r.hours_done for r in uow.daily_report_repository.get_by_course(course.id)],
-            )
-            if progress.status is CourseStatus.COMPLETED:
-                raise BusinessRuleError("Cannot enroll a trainee in a completed course.")
+            uow.course_repository.get_required(request.course_id)
             active = uow.enrollment_repository.get_active_by_trainee(request.trainee_id)
             if active is not None:
                 raise BusinessRuleError("Trainee already has an active enrollment.")
@@ -41,14 +34,7 @@ class CompleteEnrollmentUseCase:
         require_manager(current_user)
         with self._uow_factory() as uow:
             enrollment = uow.enrollment_repository.get_required(enrollment_id)
-            course = uow.course_repository.get_required(enrollment.course_id)
-            from app.application.services.course_progress import calculate_course_progress
-            progress = calculate_course_progress(
-                total_hours=course.total_hours,
-                reported_hours=[r.hours_done for r in uow.daily_report_repository.get_by_course(course.id)],
-            )
-            if progress.status is not CourseStatus.COMPLETED:
-                raise BusinessRuleError("Enrollment cannot be completed before the course is completed.")
+            uow.course_repository.get_required(enrollment.course_id)
             enrollment.complete(datetime.now(timezone.utc))
             return uow.enrollment_repository.update(enrollment)
 

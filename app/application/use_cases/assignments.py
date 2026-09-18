@@ -28,6 +28,16 @@ class AssignTrainerToTraineeUseCase:
             uow.course_repository.get_required(request.course_id)
             uow.trainer_repository.get_required(request.trainer_id)
             uow.trainee_repository.get_required(request.trainee_id)
+            course_enrollments = uow.enrollment_repository.get_by_course(
+                request.course_id
+            )
+            if not any(
+                enrollment.trainee_id == request.trainee_id
+                for enrollment in course_enrollments
+            ):
+                raise BusinessRuleError(
+                    "Trainee must be enrolled in the course before assignment."
+                )
             if not uow.assignment_repository.is_trainer_assigned_to_course(request.trainer_id, request.course_id):
                 raise BusinessRuleError("Trainer must be assigned to the course before being assigned to a trainee.")
             if uow.assignment_repository.is_trainer_assigned_to_trainee(request.trainer_id, request.trainee_id, request.course_id):

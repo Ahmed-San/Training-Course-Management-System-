@@ -23,6 +23,7 @@ from app.domain.entities.assignments import (
 from app.domain.entities.enrollment import Enrollment
 from app.domain.enums import CourseStatus, EnrollmentStatus, Role
 from app.domain.exceptions import (
+    AuthorizationError,
     BusinessRuleError,
     DuplicateError,
     NotFoundError,
@@ -453,7 +454,16 @@ def test_enroll_use_case_rejects_missing_references() -> None:
         EnrollTraineeUseCase,
     ) = _load_m3_use_cases()
     uow = FakeUnitOfWork(
-        enrollment_repository=InMemoryEnrollmentRepository(),
+        enrollment_repository=InMemoryEnrollmentRepository(
+            [
+                Enrollment(
+                    id="ENR-1",
+                    trainee_id="TRAINEE-1",
+                    course_id="COURSE-1",
+                    status=EnrollmentStatus.ACTIVE,
+                )
+            ]
+        ),
         assignment_repository=InMemoryAssignmentRepository(),
         courses={},
         trainees={"TRAINEE-1"},
@@ -477,7 +487,16 @@ def test_assignment_use_cases_require_course_trainer_and_scope() -> None:
         _,
     ) = _load_m3_use_cases()
     uow = FakeUnitOfWork(
-        enrollment_repository=InMemoryEnrollmentRepository(),
+        enrollment_repository=InMemoryEnrollmentRepository(
+            [
+                Enrollment(
+                    id="ENR-1",
+                    trainee_id="TRAINEE-1",
+                    course_id="COURSE-1",
+                    status=EnrollmentStatus.ACTIVE,
+                )
+            ]
+        ),
         assignment_repository=InMemoryAssignmentRepository(),
         courses={"COURSE-1": FakeCourse("COURSE-1")},
         trainees={"TRAINEE-1"},
@@ -525,7 +544,36 @@ def test_assign_trainer_to_trainee_rejects_unscoped_trainer() -> None:
         )
 
 
-def test_complete_enrollment_requires_completed_course() -> None:
+def test_enrollment_and_assignment_mutations_require_manager() -> None:
+    (
+        AssignTrainerRequest,
+        _,
+        EnrollTraineeRequest,
+        AssignTrainerToCourseUseCase,
+        _,
+        _,
+        EnrollTraineeUseCase,
+    ) = _load_m3_use_cases()
+    uow = FakeUnitOfWork(
+        enrollment_repository=InMemoryEnrollmentRepository(),
+        assignment_repository=InMemoryAssignmentRepository(),
+        courses={"COURSE-1": FakeCourse("COURSE-1")},
+        trainees={"TRAINEE-1"},
+        trainers={"TRAINER-1"},
+    )
+    trainee_user = FakeUser(Role.TRAINEE, profile_id="TRAINEE-1")
+
+    with pytest.raises(AuthorizationError):
+        EnrollTraineeUseCase(lambda: uow).execute(
+            EnrollTraineeRequest("TRAINEE-1", "COURSE-1"), trainee_user
+        )
+    with pytest.raises(AuthorizationError):
+        AssignTrainerToCourseUseCase(lambda: uow).execute(
+            AssignTrainerRequest("COURSE-1", "TRAINER-1"), trainee_user
+        )
+
+
+def test_complete_enrollment_requires_an_existing_course() -> None:
     (
         _,
         _,
@@ -549,10 +597,10 @@ def test_complete_enrollment_requires_completed_course() -> None:
     )
 
     assert calculate_status(uow) is CourseStatus.IN_PROGRESS
-    with pytest.raises(BusinessRuleError):
-        CompleteEnrollmentUseCase(lambda: uow).execute(
-            "ENR-1", FakeUser(Role.COURSE_MANAGER)
-        )
+    completed = CompleteEnrollmentUseCase(lambda: uow).execute(
+        "ENR-1", FakeUser(Role.COURSE_MANAGER)
+    )
+    assert completed.is_completed()
 
 
 def test_complete_enrollment_updates_status_after_course_completion() -> None:
