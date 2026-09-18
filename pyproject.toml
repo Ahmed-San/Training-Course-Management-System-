@@ -1,0 +1,12 @@
+[project]
+name = "training-course-management-system"
+version = "0.1.0"
+description = "Training Course Management System - foundation release"
+requires-python = ">=3.11"
+
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"

@@ -1,0 +1,26 @@
+# Foundation Implementation Checklist
+
+- [x] Python package structure created
+- [x] Clean Architecture directories frozen
+- [x] BaseEntity implemented
+- [x] Person implemented
+- [x] Shared enums and permissions implemented
+- [x] Shared exceptions implemented
+- [x] Shared validation implemented
+- [x] Generic repository contract implemented
+- [x] JsonDatabase implemented
+- [x] Serializer implemented
+- [x] Generic JsonRepository implemented
+- [x] JsonUnitOfWork implemented
+- [x] Atomic JSON save implemented
+- [x] Password hashing adapter implemented
+- [x] Logging configured
+- [x] Settings/composition root implemented
+- [x] Foundation tests added
+- [x] Feature files intentionally left unimplemented
+- [ ] Feature entities
+- [ ] Specialized repositories
+- [ ] Use cases
+- [ ] CLI
+- [ ] End-to-end workflow
+- [ ] Final team integration
