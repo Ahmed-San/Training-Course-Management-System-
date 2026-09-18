@@ -11,6 +11,18 @@ from app.infrastructure.persistence.json_repository import JsonRepository
 class JsonEnrollmentRepository(JsonRepository[Enrollment], EnrollmentRepository):
     """JSON adapter for enrollment storage and enrollment-specific queries."""
 
+    def __init__(
+        self,
+        *,
+        state: dict[str, list[dict[str, Any]]],
+        collection_name: str = "enrollments",
+    ) -> None:
+        super().__init__(
+            state=state,
+            collection_name=collection_name,
+            entity_type=Enrollment,
+        )
+
     def get_active_by_trainee(self, trainee_id: str) -> Enrollment | None:
         return next(
             (
