@@ -8,6 +8,8 @@ from app.domain.enums import Role
 
 
 class AssignTrainerToCourseUseCase:
+    """Assign a trainer to a course after manager and reference checks."""
+
     def __init__(self, uow_factory) -> None: self._uow_factory = uow_factory
     def execute(self, request: AssignTrainerRequest, current_user) -> CourseTrainerAssignment:
         require_manager(current_user)
@@ -21,6 +23,8 @@ class AssignTrainerToCourseUseCase:
 
 
 class AssignTrainerToTraineeUseCase:
+    """Assign a course trainer to an enrolled trainee within that course."""
+
     def __init__(self, uow_factory) -> None: self._uow_factory = uow_factory
     def execute(self, request: AssignTraineeRequest, current_user) -> TrainerTraineeAssignment:
         require_manager(current_user)
@@ -47,6 +51,8 @@ class AssignTrainerToTraineeUseCase:
 
 
 class ListTrainerCourseAssignmentsUseCase:
+    """List all assignments for a course manager."""
+
     def __init__(self, uow_factory) -> None: self._uow_factory = uow_factory
     def execute(self, current_user) -> list[CourseTrainerAssignment | TrainerTraineeAssignment]:
         require_manager(current_user)
@@ -55,6 +61,8 @@ class ListTrainerCourseAssignmentsUseCase:
 
 
 class ListTrainerTraineesUseCase:
+    """List a trainer's assigned trainees within one authorized course."""
+
     def __init__(self, uow_factory) -> None: self._uow_factory = uow_factory
 
     def execute(self, current_user, course_id: str) -> list[TrainerTraineeAssignment]:

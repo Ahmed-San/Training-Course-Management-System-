@@ -10,6 +10,8 @@ from app.domain.exceptions import AuthorizationError, BusinessRuleError
 
 
 class EnrollTraineeUseCase:
+    """Create an active enrollment while enforcing trainee uniqueness."""
+
     def __init__(self, uow_factory) -> None: self._uow_factory = uow_factory
     def execute(self, request: EnrollTraineeRequest, current_user) -> Enrollment:
         require_manager(current_user)
@@ -29,6 +31,8 @@ class EnrollTraineeUseCase:
 
 
 class CompleteEnrollmentUseCase:
+    """Complete an existing enrollment through the domain lifecycle method."""
+
     def __init__(self, uow_factory) -> None: self._uow_factory = uow_factory
     def execute(self, enrollment_id: str, current_user) -> Enrollment:
         require_manager(current_user)
@@ -40,6 +44,8 @@ class CompleteEnrollmentUseCase:
 
 
 class ViewEnrollmentUseCase:
+    """Return one enrollment only when the caller is within its scope."""
+
     def __init__(self, uow_factory) -> None: self._uow_factory = uow_factory
     def execute(self, enrollment_id: str, current_user) -> Enrollment:
         user = require_authenticated(current_user)
@@ -52,6 +58,8 @@ class ViewEnrollmentUseCase:
 
 
 class ListEnrollmentsUseCase:
+    """List enrollments filtered by the caller's role and assignment scope."""
+
     def __init__(self, uow_factory) -> None: self._uow_factory = uow_factory
     def execute(self, current_user) -> list[Enrollment]:
         user = require_authenticated(current_user)

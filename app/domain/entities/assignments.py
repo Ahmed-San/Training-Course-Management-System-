@@ -8,6 +8,8 @@ from app.domain.validation import validate_non_empty
 
 @dataclass(slots=True)
 class CourseTrainerAssignment(BaseEntity):
+    """Associate a trainer with a course."""
+
     course_id: str
     trainer_id: str
 
@@ -19,6 +21,8 @@ class CourseTrainerAssignment(BaseEntity):
 
 @dataclass(slots=True)
 class TrainerTraineeAssignment(BaseEntity):
+    """Associate a trainer with a trainee inside a specific course."""
+
     course_id: str
     trainer_id: str
     trainee_id: str
@@ -28,5 +32,3 @@ class TrainerTraineeAssignment(BaseEntity):
         self.course_id = validate_non_empty(self.course_id, "course_id")
         self.trainer_id = validate_non_empty(self.trainer_id, "trainer_id")
         self.trainee_id = validate_non_empty(self.trainee_id, "trainee_id")
-
-#TODO: Consider adding methods to check if a trainer is assigned to a specific course or if a trainee is assigned to a specific trainer.

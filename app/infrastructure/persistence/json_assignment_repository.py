@@ -9,7 +9,7 @@ from app.infrastructure.persistence.serializer import entity_from_dict, entity_t
 
 
 class JsonAssignmentRepository(AssignmentRepository):
-    """JSON adapter for both M3 assignment entities."""
+    """Persist course and trainee assignments in their dedicated collections."""
 
     _COURSE_COLLECTION = "course_trainer_assignments"
     _TRAINEE_COLLECTION = "trainer_trainee_assignments"

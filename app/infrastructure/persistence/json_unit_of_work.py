@@ -18,7 +18,7 @@ from app.infrastructure.persistence.json_repository import JsonRepository
 
 
 class JsonUnitOfWork(UnitOfWork):
-    """Atomic working copy of the single JSON database document."""
+    """Expose repositories over one atomic working copy of the JSON document."""
 
     def __init__(self, database: JsonDatabase) -> None:
         self.database = database
