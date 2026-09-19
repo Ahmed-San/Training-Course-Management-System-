@@ -18,9 +18,9 @@
 - [x] Settings/composition root implemented
 - [x] Foundation tests added
 - [x] Feature files intentionally left unimplemented
-- [ ] Feature entities
-- [ ] Specialized repositories
-- [ ] Use cases
+- [x] M3 enrollment and assignment entities
+- [x] M3 specialized repositories
+- [x] M3 enrollment and assignment use cases
 - [ ] CLI
 - [ ] End-to-end workflow
 - [ ] Final team integration

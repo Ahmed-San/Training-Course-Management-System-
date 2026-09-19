@@ -47,6 +47,7 @@ The first checkpoint implements the reusable architecture foundation. Feature im
 - `docs/foundation.md` — what is implemented now and what is intentionally deferred.
 - `docs/vibe_coding_guide.md` — bounded AI/Vibe Coding policy.
 - `docs/implementation_checklist.md` — phase status.
+- `docs/m3_enrollment_assignments.md` — M3 scope, rules, persistence, and validation evidence.
 
 ## Architecture
 
