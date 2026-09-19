@@ -38,3 +38,7 @@ class Repository(ABC, Generic[TEntity]):
     @abstractmethod
     def count(self) -> int:
         raise NotImplementedError
+
+
+# Alias for backward compatibility
+BaseRepository = Repository

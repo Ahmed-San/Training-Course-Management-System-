@@ -11,6 +11,8 @@ from app.domain.validation import validate_enum, validate_non_empty
 
 @dataclass(slots=True)
 class Enrollment(BaseEntity):
+    """Connect one trainee to one course through an explicit lifecycle."""
+
     trainee_id: str
     course_id: str
     status: EnrollmentStatus
@@ -29,6 +31,7 @@ class Enrollment(BaseEntity):
             raise ValidationError("A completed enrollment requires completed_at.")
 
     def complete(self, completed_at: datetime) -> None:
+        """Move an active enrollment to completed exactly once."""
         if not isinstance(completed_at, datetime):
             raise ValidationError("completed_at must be a datetime.")
         if self.is_completed():
@@ -37,7 +40,9 @@ class Enrollment(BaseEntity):
         self.completed_at = completed_at
 
     def is_active(self) -> bool:
+        """Return whether the enrollment can still be completed."""
         return self.status is EnrollmentStatus.ACTIVE
 
     def is_completed(self) -> bool:
+        """Return whether the enrollment has reached its terminal state."""
         return self.status is EnrollmentStatus.COMPLETED
