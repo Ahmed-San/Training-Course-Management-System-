@@ -8,8 +8,6 @@ from app.domain.validation import validate_non_empty
 
 @dataclass(slots=True)
 class CourseTrainerAssignment(BaseEntity):
-    """Associate a trainer with a course."""
-
     course_id: str
     trainer_id: str
 
@@ -21,8 +19,6 @@ class CourseTrainerAssignment(BaseEntity):
 
 @dataclass(slots=True)
 class TrainerTraineeAssignment(BaseEntity):
-    """Associate a trainer with a trainee inside a specific course."""
-
     course_id: str
     trainer_id: str
     trainee_id: str

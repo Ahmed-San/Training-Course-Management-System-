@@ -68,3 +68,7 @@ data/database.json
 The approved post-foundation execution plan is documented in `docs/team_execution_plan.md`. Placeholder responsibilities are documented in `docs/placeholder_audit.md`. Use `docs/vertical_slice.md` for the first end-to-end integration slice and `docs/merge_checklist.md` before every merge.
 
 طه محمد محمد ذياب  : branch/feature/m1-people-identity 
+احمد عبد الرحمن السنباني : branch/feature/m3-Enrollment-Assignments
+عبد الله اسعد محمد سامه : branch/feature/m5_Evaluation_CLI_Integration_Release
+فوزي النصيري : branch/feature/m2-Course-Management
+خالد اكرم الانسي :branch/feature/m4_Reports_Progress
