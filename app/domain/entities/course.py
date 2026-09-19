@@ -28,7 +28,7 @@ class Course(BaseEntity):
     manager_id: str
 
     def __post_init__(self) -> None:
-        super().__post_init__()
+        BaseEntity.__post_init__(self)
         self.name = validate_non_empty(self.name, "Course name")
         self.total_hours = validate_positive_int(self.total_hours, "Total hours")
         self.description = validate_non_empty(self.description, "Course description")
